@@ -1,22 +1,6 @@
 import csv
 
 
-def labevents_abnormal():
-    """
-    所有检查为abnormal的保存在一起
-    """
-    with open(r'C:\Users\47050\Desktop\data\ab_labevents.csv', 'w') as fout:
-        fin = r'D:\BaiduNetdiskDownload\MIMIC_III\MIMIC_III\LABEVENTS_DATA_TABLE.csv'
-        with open(fin, 'r') as fin:
-            reader = csv.DictReader(fin)
-            for row in reader:
-                if row['FLAG'] == 'abnormal':
-                    fout.write(row['ROW_ID'] + ',' + row['SUBJECT_ID'] + ',' + row['ITEMID'] + ',' +
-                               row['VALUE'] + ',' + row['VALUENUM'] + ',' + row['VALUEUOM'] + ','+row['FLAG'])
-                    fout.write('\n')
-#                    print(row['ROW_ID'])
-#                    print("\n")
-
 def in_HADM(hadm_id):
     """
     判断是否在HADM_ID_EV表里
