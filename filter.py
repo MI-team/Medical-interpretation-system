@@ -38,21 +38,22 @@ def labevents_filter():
     是否可以每个HADM_ID代表一个新病人，删除SUBJECT_ID字段？
     """
     num = 0     #计数 看运行到哪了
+    num_row = 0
     with open(r'C:\Users\47050\Desktop\data\labevents_filter.csv', 'w') as fout:
-        fout.write('SUBJECT_ID,HADM_ID,ITEMID,CHARTTIME,VALUE，VALUENUM，VALUEUOM,FLAG\n')
-        fin = r'D:\BaiduNetdiskDownload\MIMIC_III\MIMIC_III\LABEVENTS_DATA_TABLE.csv'
+        fout.write('SUBJECT_ID,HADM_ID,ITEMID,CHARTTIME,VALUE,VALUENUM,VALUEUOM,FLAG\n')
+        fin = r'C:\Users\47050\Desktop\data\labevents_empty_filter.csv'
         with open(fin, 'r') as fin:
             reader = csv.DictReader(fin)
             for row in reader:
-                if(len(row['HADM_ID'])>0 and in_HADM(row['HADM_ID'])==0):
+                num_row = num_row + 1
+                if(num_row%1000 == 0):
+                    print(num_row)
+                if(binary_search(row['HADM_ID']) == 1):
                     if not(num == 0):
                         fout.write('\n')
                     fout.write(row['SUBJECT_ID'] + ',' + row['HADM_ID'] + ',' + row['ITEMID'] + ',' + row['CHARTTIME']
                                + ',' + row['VALUE'] + ',' + row['VALUENUM'] + ',' + row['VALUEUOM'] + ','+row['FLAG'])
                     num = num+1
-                    print(num)
-                    print("\n")
-
 
 def hadm_id_EV():
     """
@@ -172,6 +173,28 @@ def hadm_id_notEV():
                 fout.write(row['HADM_ID'])
                 num = num + 1
 
+def binary_search(data):
+    """
+    二分查找
+    """
+    #转化成list
+    search_path = r'C:\Users\47050\Desktop\data\HADM_ID_notEV.csv'
+    with open(search_path, 'r') as search_file:
+        search_reader = csv.reader(search_file)
+        search_list = list(search_reader)
+    n = len(search_list)
+    first = 0
+    last = n-1
+    while(first <= last):
+        mid = (first + last) // 2   #向下取整
+        if(" ".join(search_list[mid])> data):
+            last = mid - 1
+        elif(" ".join(search_list[mid]) < data):
+            first = mid + 1
+        else:
+            return 1
+    return 0
+
 
 #count()
 #empty_filter()
@@ -179,7 +202,7 @@ def hadm_id_notEV():
 
 #labevents_abnormal()
 #hadm_id_EV()
-#labevents_filter()
+labevents_filter()
 
 
 
